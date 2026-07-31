@@ -1,60 +1,70 @@
 {
-<<<<<<< HEAD
-  "name": "moderna-erp",
-  "version": "0.1.0",
-  "description": "Sistema inteligente para gestão de cadastro de produtos para e-commerce.",
-  "type": "module",
-  "private": true,
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "test": "vitest",
-    "lint": "eslint .",
-    "format": "prettier --write ."
-  },
-  "devDependencies": {
-    "@types/node": "^24.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.0.0",
-    "@typescript-eslint/parser": "^8.0.0",
-    "eslint": "^9.0.0",
-    "prettier": "^3.0.0",
-    "typescript": "^5.0.0",
-    "vite": "^7.0.0",
-    "vitest": "^3.0.0"
-  }
-}
-=======
+
   "name": "modernaerp",
+
   "private": true,
+
   "version": "0.0.0",
+
   "type": "module",
+
   "scripts": {
+
     "dev": "vite",
+
     "build": "tsc -b && vite build",
+
     "lint": "eslint .",
+
     "preview": "vite preview"
+
   },
+
   "dependencies": {
+
     "@tailwindcss/vite": "^4.3.3",
+
     "lucide-react": "^1.28.0",
+
     "react": "^19.2.8",
+
     "react-dom": "^19.2.8",
+
+    "react-router": "^8.3.0",
+
+    "react-router-dom": "^7.18.2",
+
     "tailwindcss": "^4.3.3"
+
   },
+
   "devDependencies": {
+
     "@eslint/js": "^10.0.1",
+
     "@types/node": "^24.13.3",
+
     "@types/react": "^19.2.17",
+
     "@types/react-dom": "^19.2.3",
+
     "@vitejs/plugin-react": "^6.0.4",
+
     "eslint": "^10.8.0",
+
     "eslint-plugin-react-hooks": "^7.1.1",
+
     "eslint-plugin-react-refresh": "^0.5.3",
+
     "globals": "^17.7.0",
+
     "typescript": "~6.0.2",
+
     "typescript-eslint": "^8.65.0",
+
     "vite": "^8.2.0"
+
   }
+
 }
->>>>>>> e4a27b5 (chore: alteração para react e alteração para design system)
+

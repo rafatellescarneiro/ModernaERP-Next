@@ -2,21 +2,21 @@
  * ==========================================================
  * Arquivo: App.tsx
  * Projeto: Moderna ERP
- * 
- * Responsabilidade:
- * Componente raiz da aplicação
- * Toda a interface é carregada a partir daqui.
  * ==========================================================
  */
 
-import { AppProviders } from "./providers/AppProviders"
-import { AppRouter } from "./router/AppRouter"
+export function App() {
+  return (
+    <main className="min-h-screen flex items-center justify-center bg-slate-100">
+      <div className="rounded-xl bg-white p-10 shadow-md">
+        <h1 className="text-3xl font-bold">
+          Moderna ERP
+        </h1>
 
-export function App(){
-    return (
-        <AppProviders>
-            <AppRouter />
-        </AppProviders>
-    );
+        <p className="mt-3 text-slate-500">
+          Projeto iniciado com sucesso.
+        </p>
+      </div>
+    </main>
+  );
 }
-

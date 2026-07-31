@@ -1,8 +1,7 @@
 /**
  * ==========================================================
  * Arquivo: main.tsx
- *
- * Ponto de entrada da aplicação React.
+ * Ponto de entrada da aplicação.
  * ==========================================================
  */
 
@@ -14,9 +13,9 @@ import { App } from "./app/App";
 import "./ui/styles/globals.css";
 
 ReactDOM.createRoot(
-    document.getElementById("root") as HTMLElement
+  document.getElementById("root")!
 ).render(
-    <React.StrictMode>
-        <App />
-    </React.StrictMode>
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
 );

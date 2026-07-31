@@ -1,15 +1,15 @@
-# Moderna ERP
+Moderna ERP
 
-Sistema inteligente para gestão de cadastro de produtos para e-commerce e marketplaces.
+Descrição
 
-## Tecnologias
+Tecnologias
 
-- TypeScript
-- Vite
-- Vitest
-- ESLint
-- Prettier
+Arquitetura
 
-## Estrutura
+Como executar
 
-Em desenvolvimento.
+Estrutura
+
+Roadmap
+
+Licença
