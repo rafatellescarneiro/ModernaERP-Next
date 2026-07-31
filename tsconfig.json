@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "compilerOptions": {
     "target": "ES2023",
     "module": "ESNext",
@@ -28,3 +29,11 @@
 
   "include": ["src"]
 }
+=======
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
+>>>>>>> e4a27b5 (chore: alteração para react e alteração para design system)

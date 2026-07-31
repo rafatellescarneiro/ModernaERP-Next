@@ -1,0 +1,24 @@
+/*
+==========================================================
+
+Arquivo: globals.css
+
+Responsável pelos estilos globais do sistema.
+
+==========================================================
+*/
+
+@import "tailwindcss";
+
+html,
+body,
+#root {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    background: #f4f7fb;
+}
