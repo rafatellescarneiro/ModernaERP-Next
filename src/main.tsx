@@ -7,6 +7,7 @@
 
 import React from "react";
 import ReactDOM from "react-dom/client";
+import "@fontsource/inter";
 
 import { App } from "./app/App";
 
