@@ -8,6 +8,8 @@
 
 import { DashboardCard } from "../components/DashboardCard";
 import { dashboardData } from "../data/dashboard.mock";
+import { WorkflowCard } from "../components/WorkflowCard/WorkflowCard";
+import { workflowData } from "../data/workflow.mock";
 
 export function DashboardPage(){
   return(
@@ -44,6 +46,35 @@ export function DashboardPage(){
           title="Concluídos"
           value={dashboardData.concluidos}
         />
+
+      </section>
+
+      <section>
+        <h2 className="mb-6 text-x1 font-semibold">
+
+          Fluxo Operacional
+
+        </h2>
+
+        <div className="grid gap-5 lg:grid-cols-5">
+          {
+
+            workflowData.map((item)=>(
+
+              <WorkflowCard
+
+                key={item.etapa}
+
+                title={item.etapa}
+
+                value={item.quantidade}
+
+                color={item.cor}
+              />
+            ))
+
+          }
+        </div>
 
       </section>
 
