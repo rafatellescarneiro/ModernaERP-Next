@@ -6,6 +6,8 @@ export interface Product {
 
   sku: string;
 
+  titulo: string;
+
   descricao: string;
 
   quantidade: number;
@@ -14,6 +16,8 @@ export interface Product {
 
   previsaoMarketplace?: Date;
 
+  etapa: ProductStep;
+
   status: ProductStatus;
 
 }
@@ -21,6 +25,21 @@ export interface Product {
 export enum ProductStatus {
 
   CADASTRO = "CADASTRO",
+
+  DESCRICAO = "DESCRICAO",
+
+  IMAGENS = "IMAGENS",
+
+  PROCODE = "PROCODE",
+
+  CONFERENCIA = "CONFERENCIA",
+
+  CONCLUIDO = "CONCLUIDO",
+
+}
+
+export enum ProductStep {
+  ERP = "ERP",
 
   DESCRICAO = "DESCRICAO",
 
