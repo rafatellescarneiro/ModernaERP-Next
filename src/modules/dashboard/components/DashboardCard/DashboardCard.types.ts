@@ -1,11 +1,12 @@
 /**
  * ==========================================================
- * Componente raiz da aplicação
+ * Tipos do DashboardCard
  * ==========================================================
  */
 
-import { AppRouter } from "./router/AppRouter";
+export interface DashboardCardProps {
+  title: string;
+  value: number | string;
+  subtitle?: string;
 
-export function App() {
-  return <AppRouter />;
 }
