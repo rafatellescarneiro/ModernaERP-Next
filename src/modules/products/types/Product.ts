@@ -1,3 +1,15 @@
+/**
+ * ==========================================================
+ * Arquivo: Product.ts
+ *
+ * Entidade principal do módulo de Produtos.
+ * ==========================================================
+ */
+
+
+import { ProductMarketplace } from "./Marketplace";
+import { ProductStep } from "./ProductStep";
+
 export interface Product {
 
   id: string;
@@ -18,8 +30,7 @@ export interface Product {
 
   etapa: ProductStep;
 
-  status: ProductStatus;
-
+  marketplaces: ProductMarketplace[];
 }
 
 export enum ProductStatus {
@@ -38,17 +49,12 @@ export enum ProductStatus {
 
 }
 
-export enum ProductStep {
-  ERP = "ERP",
+export interface SearchResult {
 
-  DESCRICAO = "DESCRICAO",
+  product?: Product;
 
-  IMAGENS = "IMAGENS",
+  confict: boolean;
 
-  PROCODE = "PROCODE",
-
-  CONFERENCIA = "CONFERENCIA",
-
-  CONCLUIDO = "CONCLUIDO",
+  message?: string;
 
 }
