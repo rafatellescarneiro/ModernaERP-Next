@@ -25,7 +25,18 @@ export interface ProductSearchResult {
 
 }
 
+export interface ProductListSearchResult {
+
+  products: Product[];
+
+  conflict: boolean;
+
+  message?: string;
+
+}
+
 export class ProductService {
+
   constructor(
     private readonly repository: ProductRepository,
 
@@ -36,12 +47,26 @@ export class ProductService {
 
   }
 
+  /**
+   * Pesquisa um produto utilizando código ou SKU.
+   *
+   * Regra:
+   *
+   * 1. Procura pelo código.
+   * 2. Procura pelo SKU.
+   * 3. Se forem produtos diferentes,
+   *    retorna conflito.
+   */
+
   async search(
     term: string,
   ): Promise<ProductSearchResult>{
-    const normalizedTerm = term.trim();
+
+    const normalizedTerm =
+      term.trim();
 
     if(!normalizedTerm){
+
       return{
         conflict: false,
       };
@@ -93,6 +118,57 @@ export class ProductService {
       conflict: false,
     };
   }
+
+  /**
+   * Pesquisa produtos por código ou SKU.
+   *
+   * Essa pesquisa é utilizada pela listagem da página.
+   *
+   * Diferentemente do método search(), este método
+   * pode retornar vários produtos.
+   */
+
+  async searchList(
+    term: string,
+  ): Promise<ProductListSearchResult>{
+
+    const products =
+      await this.repository.findAll();
+
+    const normalizedTerm =
+      term.trim().toLowerCase();
+
+
+    if(!normalizedTerm){
+
+      return {
+        products,
+
+        conflict: false,
+
+      };
+
+    }
+
+    const filteredProducts =
+      products.filter(
+        (product) =>
+          product.codigo
+            .toLowerCase()
+            .includes(normalizedTerm) ||
+          product.sku
+            .toLowerCase()
+            .includes(normalizedTerm),
+      );
+
+    return {
+      products: filteredProducts,
+
+      conflict: false,
+    };
+
+  }
+
 }
 
 

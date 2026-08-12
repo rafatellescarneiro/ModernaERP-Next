@@ -45,26 +45,47 @@ export class ProductRepository {
     );
   }
 
+/**
+ * Salva um produto.
+ *
+ * Ainda será implementado quando tivermos
+ * uma fonte de dados persistente.
+*/
+
   async save(
-    _product: Product,
+    product: Product,
   ): Promise<Product> {
+
+    void product;
+
     throw new Error(
       "ProductRepository.save ainda não foi implementado.",
     );
   }
 
-
+/**
+ * Atualiza um produto.
+*/
   async update(
-    _product: Product,
+    product: Product,
   ): Promise<Product> {
+
+    void product;
+
     throw new Error(
       "ProductRepository.update ainda não foi implementado.",
     );
   }
 
+/**
+ * Exclui um produto.
+*/
   async delete(
-    _id: string,
+    id: string,
   ): Promise<void> {
+
+    void id;
+
     throw new Error(
       "ProductRepository.delete ainda não foi implementado.",
     );
