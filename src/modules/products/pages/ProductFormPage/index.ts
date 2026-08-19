@@ -1,11 +1,9 @@
 /**
  * ==========================================================
- * Componente raiz da aplicação
+ * Exportações públicas da página ProductFormPage.
  * ==========================================================
  */
 
-import { AppRouter } from "./router/AppRouter";
-
-export function App() {
-  return <AppRouter />;
-}
+export {
+  ProductFormPage,
+} from "./ProductFormPage";
