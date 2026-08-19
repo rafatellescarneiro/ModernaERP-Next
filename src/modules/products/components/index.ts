@@ -17,3 +17,12 @@ export {
 export {
   ProductToolbar,
 } from "./ProductToolbar";
+
+export {
+  ProductForm,
+} from "./ProductForm"
+
+export type {
+  ProductFormData,
+  ProductFormProps,
+} from "./ProductForm";

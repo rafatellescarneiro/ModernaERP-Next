@@ -25,6 +25,11 @@ import {
   createProductService,
 } from "../../../app/dependencies/products";
 
+import type {
+  CreateProductData,
+
+} from "../services/ProductService";
+
 /**
  * Retorno disponibilizado pelo Hook.
  */
@@ -56,6 +61,11 @@ export interface UseProductsResult {
   search:(
     term: string,
   ) => Promise<void>;
+
+  create:(
+    data: CreateProductData,
+
+  )=> Promise<Product>;
 
 }
 
@@ -153,6 +163,51 @@ export function useProducts(): UseProductsResult {
 
     );
 
+  const create = useCallback(
+    async(
+      data: CreateProductData,
+
+    ): Promise<Product> => {
+
+      try{
+        setLoading(true);
+
+        setError(null);
+
+        const product =
+          await service.create(data);
+
+        setProducts(
+          (current)=>[
+            ...current,
+            product,
+          ],
+        );
+
+        return product;
+
+      } catch (error) {
+
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Não foi possível cadastrar o produto.";
+
+        setError(message);
+
+        throw new Error(
+          message,
+          {
+            cause: error,
+          }
+        );
+
+      } finally {
+        setLoading(false);
+      }
+    },
+    [service],
+  );
 
 
 
@@ -224,5 +279,7 @@ export function useProducts(): UseProductsResult {
     reload: loadProducts,
 
     search,
+
+    create,
   };
 }

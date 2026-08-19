@@ -33,22 +33,6 @@ export interface Product {
   marketplaces: ProductMarketplace[];
 }
 
-export enum ProductStatus {
-
-  CADASTRO = "CADASTRO",
-
-  DESCRICAO = "DESCRICAO",
-
-  IMAGENS = "IMAGENS",
-
-  PROCODE = "PROCODE",
-
-  CONFERENCIA = "CONFERENCIA",
-
-  CONCLUIDO = "CONCLUIDO",
-
-}
-
 export interface SearchResult {
 
   product?: Product;

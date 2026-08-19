@@ -11,6 +11,11 @@
 import type { Product } from "../types";
 
 import {
+  ProductStep,
+
+} from "../types"
+
+import {
   ProductRepository,
 
 } from "../repositories";
@@ -35,12 +40,94 @@ export interface ProductListSearchResult {
 
 }
 
+export interface CreateProductData {
+
+  /**
+   * Código interno do produto.
+   */
+  codigo: string;
+
+  /**
+   * SKU do produto.
+   */
+  sku: string;
+
+  /**
+   * Título comercial.
+   */
+  titulo: string;
+
+  /**
+   * Descrição comercial.
+   */
+  descricao: string;
+
+  /**
+   * Quantidade disponível.
+   */
+  quantidade: number;
+
+}
+
 export class ProductService {
 
   constructor(
     private readonly repository: ProductRepository,
 
   ){}
+
+  async create(
+    data: CreateProductData,
+  ): Promise<Product> {
+
+    /**
+     * Cria a entidade completa do produto.
+     */
+    const product: Product = {
+
+      /**
+       * Gera um identificador único para o produto.
+       */
+      id: crypto.randomUUID(),
+
+      /**
+       * Dados fornecidos pelo formulário.
+       */
+      codigo: data.codigo.trim(),
+
+      sku: data.sku.trim(),
+
+      titulo: data.titulo.trim(),
+
+      descricao: data.descricao.trim(),
+
+      quantidade: data.quantidade,
+
+      /**
+       * Data automática do cadastro.
+       */
+      dataCadastro: new Date(),
+
+      /**
+       * Todo produto novo começa na etapa ERP.
+       */
+      etapa: ProductStep.ERP,
+
+      /**
+       * Nenhum marketplace foi processado ainda.
+       */
+      marketplaces: [],
+
+    };
+
+    /**
+     * Persiste o produto através do Repository.
+     */
+    return this.repository.save(
+      product,
+    );
+
+  }
 
   async getProducts(): Promise<Product[]>{
     return this.repository.findAll();

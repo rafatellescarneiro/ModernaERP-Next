@@ -6,37 +6,56 @@
  *
  * A página é responsável pela composição visual.
  * As regras de acesso e pesquisa ficam no Hook/Service.
+ *
+ * Também controla a navegação entre:
+ *
+ * - Lista de produtos
+ * - Cadastro de novo produto
+ *
+ * A persistência será conectada posteriormente ao Service.
  * ==========================================================
-*/
+ */
 
-import{
+import {
   useEffect,
   useRef,
   useState,
-
 } from "react";
 
-import{
+import {
   ProductTable,
   ProductToolbar,
+} from "../components";
 
-} from "../components"
+import {
+  ProductFormPage,
+} from "./ProductFormPage";
 
-import{
+import {
   useProducts,
 } from "../hooks";
 
-import{
+import {
   useDebounce,
-} from "../../../shared/hooks"
+} from "../../../shared/hooks";
 
+import type {
+  ProductFormData,
+} from "../components";
 
 /**
  * Página principal de produtos.
-*/
-
-
+ */
 export function ProductsPage() {
+
+  /**
+   * Controla qual tela do módulo está sendo exibida.
+   *
+   * false = lista de produtos
+   * true  = cadastro de produto
+   */
+  const [showCreateForm, setShowCreateForm] =
+    useState(false);
 
   /**
    * Termo informado na pesquisa.
@@ -44,16 +63,23 @@ export function ProductsPage() {
   const [search, setSearch] =
     useState("");
 
+  /**
+   * Aguarda 300ms após o usuário parar de digitar
+   * antes de executar a pesquisa.
+   */
   const debouncedSearch =
-    useDebounce(search, 300)
+    useDebounce(search, 300);
 
+  /**
+   * Evita executar a pesquisa automaticamente
+   * na primeira renderização.
+   */
   const searchInitialized =
     useRef(false);
 
   /**
    * Dados e estado do módulo.
    */
-
   const {
     products,
     loading,
@@ -61,18 +87,26 @@ export function ProductsPage() {
     search: searchProducts,
   } = useProducts();
 
+  /**
+   * Atualiza o termo de pesquisa.
+   */
   function handleSearch(
     value: string,
-  ){
+  ) {
 
     setSearch(value);
 
   }
 
-  useEffect(()=>{
+  /**
+   * Executa a pesquisa quando o usuário
+   * termina de digitar.
+   */
+  useEffect(() => {
 
-    if(!searchInitialized.current){
-      searchInitialized.current =true
+    if (!searchInitialized.current) {
+
+      searchInitialized.current = true;
 
       return;
 
@@ -82,24 +116,89 @@ export function ProductsPage() {
       debouncedSearch,
     );
 
-
-  },[
+  }, [
     debouncedSearch,
     searchProducts,
   ]);
 
-/**
- * Executado quando o usuário clica
- * em Novo Produto.
- */
+  /**
+   * Abre o formulário de novo produto.
+   */
+  function handleCreate() {
 
-  function handleCreate(){
+    setShowCreateForm(true);
 
-    console.log(
-      "Novo produto",
-    );
   }
 
+  /**
+   * Fecha o formulário e retorna para
+   * a lista de produtos.
+   */
+  function handleCancelCreate() {
+
+    setShowCreateForm(false);
+
+  }
+
+  /**
+   * Executado quando o formulário é enviado.
+   *
+   * Neste momento estamos apenas verificando
+   * se os dados chegam corretamente.
+   *
+   * Na próxima etapa vamos conectar essa função
+   * ao ProductService.
+   */
+  async function handleCreateSubmit(
+    data: ProductFormData,
+  ) {
+
+    console.log(
+      "Dados do novo produto:",
+      data,
+    );
+
+    /**
+     * Retornamos para a lista somente depois
+     * que o envio for concluído.
+     */
+    setShowCreateForm(false);
+
+  }
+
+  /**
+   * --------------------------------------------------------
+   * MODO: CADASTRO
+   * --------------------------------------------------------
+   *
+   * Quando showCreateForm for true, exibimos a página
+   * de cadastro no lugar da tabela.
+   */
+  if (showCreateForm) {
+
+    return (
+
+      <ProductFormPage
+
+        onCancel={
+          handleCancelCreate
+        }
+
+        onSubmit={
+          handleCreateSubmit
+        }
+
+      />
+
+    );
+
+  }
+
+  /**
+   * --------------------------------------------------------
+   * MODO: LISTA
+   * --------------------------------------------------------
+   */
 
   return (
 
@@ -108,7 +207,7 @@ export function ProductsPage() {
       {/* Cabeçalho da página */}
       <header>
 
-        <h1 className="text-3xl font-bold">
+        <h1 className="text-3xl font-bold text-slate-900">
           Produtos
         </h1>
 
@@ -174,6 +273,7 @@ export function ProductsPage() {
       {!loading && !error && (
 
         <ProductTable
+
           products={
             products
           }
@@ -199,4 +299,5 @@ export function ProductsPage() {
     </section>
 
   );
+
 }

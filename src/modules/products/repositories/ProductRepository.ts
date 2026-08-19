@@ -48,18 +48,16 @@ export class ProductRepository {
 /**
  * Salva um produto.
  *
- * Ainda será implementado quando tivermos
- * uma fonte de dados persistente.
+ * O Repository apenas encaminha a operação para
+ * o Provider. Regras de negócio ficam no Service.
 */
 
   async save(
     product: Product,
   ): Promise<Product> {
 
-    void product;
-
-    throw new Error(
-      "ProductRepository.save ainda não foi implementado.",
+    return this.provider.save(
+      product,
     );
   }
 

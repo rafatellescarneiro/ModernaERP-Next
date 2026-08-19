@@ -20,4 +20,8 @@ export interface ProductProvider {
 
   findAll(): Promise<Product[]>;
 
+  save(
+    product: Product,
+  ): Promise<Product>;
+
 }
