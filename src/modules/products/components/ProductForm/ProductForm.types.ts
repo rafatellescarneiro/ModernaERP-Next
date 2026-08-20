@@ -49,6 +49,8 @@ export interface ProductFormData {
  */
 export interface ProductFormProps {
 
+  initialData?: ProductFormData;
+
   /**
    * Executado quando o formulário é enviado.
    */

@@ -19,5 +19,10 @@ export interface ProductTableProps {
     product: Product,
 
   ) => void;
+
+  onDelete?:(
+    product:Product,
+
+  ) => void;
 }
 

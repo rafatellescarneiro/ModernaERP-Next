@@ -255,6 +255,91 @@ export class ProductService {
     };
 
   }
+  /**
+   * ==========================================================
+   * Atualiza um produto existente.
+   * ==========================================================
+   */
+  async update(
+    product: Product,
+    data: CreateProductData,
+  ): Promise<Product>{
+
+    const existingByCodigo =
+      await this.repository.findByCodigo(
+        data.codigo.trim(),
+      );
+
+    if(
+      existingByCodigo &&
+      existingByCodigo.id !== product.id
+    ){
+      throw new Error(
+        "Já existe outro produto com este código"
+      );
+
+    }
+
+    const existingBySku =
+      await this.repository.findBySku(
+        data.sku.trim(),
+      );
+
+      if(
+        existingBySku &&
+        existingBySku.id !== product.id
+      ){
+        throw new Error(
+          "Já existe outro produto com este SKU",
+        );
+      }
+
+    const updateProduct: Product = {
+      ...product,
+
+      codigo: data.codigo.trim(),
+
+      sku: data.sku.trim(),
+
+      titulo: data.titulo.trim(),
+
+      descricao: data.descricao.trim(),
+
+      quantidade: data.quantidade,
+    };
+
+    return this. repository.update(
+      updateProduct,
+    );
+
+  }
+
+  async delete(
+    product: Product,
+
+  ): Promise<void> {
+
+    const existingProduct =
+      await this.repository.findByCodigo(
+        product.codigo,
+      );
+
+    if (
+      !existingProduct ||
+      existingProduct.id !== product.id
+    ){
+      throw new Error(
+        "Produto não encontrado."
+      );
+
+    }
+
+    await this.repository.delete(
+      product.id,
+    );
+
+  }
+
 
 }
 

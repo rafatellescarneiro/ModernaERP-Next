@@ -67,6 +67,14 @@ export interface UseProductsResult {
 
   )=> Promise<Product>;
 
+  update:(
+    product:Product,
+    data: CreateProductData,
+  ) => Promise<Product>;
+
+  delete:(
+    product: Product
+  ) => Promise<void>
 }
 
 /**
@@ -209,6 +217,103 @@ export function useProducts(): UseProductsResult {
     [service],
   );
 
+  const update = useCallback(
+    async(
+      product: Product,
+      data: CreateProductData,
+    ): Promise<Product> => {
+
+      try{
+
+        setLoading(true);
+
+        setError(null);
+
+        const updateProduct =
+          await service.update(
+            product,
+            data,
+          );
+
+          setProducts(
+            (current) =>
+              current.map(
+                (currentProduct) =>
+                  currentProduct.id === product.id
+                    ? updateProduct
+                    : currentProduct,
+              ),
+          );
+
+        return updateProduct;
+
+      } catch(error){
+
+        const message =
+        error instanceof Error
+        ? error.message
+        : "Não foi possível atualizar o produto.";
+
+        setError(message);
+
+        throw new Error(
+          message,{
+            cause: error,
+          }
+        );
+
+      } finally{
+        setLoading(false)
+      }
+
+    },
+    [service],
+  )
+
+
+  const deleteProduct = useCallback(
+    async(
+      product: Product,
+    ): Promise<void> =>{
+      try{
+
+        setLoading(true);
+
+        setError(null);
+
+        await service.delete(
+          product,
+        );
+
+        setProducts(
+          (current) =>
+            current.filter(
+              (currentProduct)=>
+                currentProduct.id !== product.id,
+            ),
+        );
+
+      }catch(error){
+
+        const message=
+          error instanceof Error
+            ? error.message
+            : "Não foi possível excluir o produto.";
+
+          setError(message);
+
+          throw new Error(
+            message,{
+              cause:error,
+            },
+          );
+
+      }finally{
+        setLoading(false);
+      }
+    },
+    [service]
+  )
 
 
   useEffect(() => {
@@ -281,5 +386,9 @@ export function useProducts(): UseProductsResult {
     search,
 
     create,
+
+    update,
+
+    delete: deleteProduct,
   };
 }

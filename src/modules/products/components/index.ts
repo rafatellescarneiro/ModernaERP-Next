@@ -26,3 +26,8 @@ export type {
   ProductFormData,
   ProductFormProps,
 } from "./ProductForm";
+
+export {
+  ProductDeleteModal
+} from "./ProductDeleteModal"
+
