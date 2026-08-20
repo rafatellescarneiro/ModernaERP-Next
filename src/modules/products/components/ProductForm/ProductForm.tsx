@@ -45,6 +45,7 @@ const initialFormData: ProductFormData = {
  * Formulário de cadastro de produto.
  */
 export function ProductForm({
+  initialData,
   onSubmit,
   onCancel,
   loading = false,
@@ -55,7 +56,7 @@ export function ProductForm({
    */
   const [formData, setFormData] =
     useState<ProductFormData>(
-      initialFormData,
+      initialData ?? initialFormData,
     );
 
   /**

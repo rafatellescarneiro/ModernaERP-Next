@@ -15,10 +15,12 @@ import type {
   ProductTableProps,
 } from "./ProductTable.types"
 
+
 export function ProductTable({
   products,
   onEdit,
   onView,
+  onDelete,
 
 }: ProductTableProps){
 
@@ -172,6 +174,22 @@ export function ProductTable({
                       >
                         Editar
                       </button>
+
+                      <button
+                        type="button"
+                        onClick={()=>
+                          onDelete?.(product)
+                        }
+                        className="
+                          text-sm
+                          font-medium
+                          text-red-600
+                          hover:text-red-700
+                        "
+                      >
+                        Excluir
+                      </button>
+
 
                     </div>
 

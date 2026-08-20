@@ -34,4 +34,52 @@ export class MockProductProvider
     return product;
   }
 
+  async update(
+    product: Product,
+  ): Promise<Product>{
+
+    const index =
+      this.products.findIndex(
+        (current) =>
+          current.id === product.id,
+      );
+
+      if(index === -1){
+
+        throw new Error(
+          "Produto não encontrado"
+        );
+      }
+
+      this.products[index] = product;
+
+      return product;
+
+  }
+
+  async delete(
+    id:string,
+  ): Promise<void>{
+
+    const index =
+      this.products.findIndex(
+        (product) =>
+          product.id === id,
+
+      );
+
+      if(index === -1){
+
+        throw new Error(
+          "Produto não encontrado"
+        );
+      }
+
+      this.products.splice(
+        index,
+        1,
+      );
+
+  }
+
 }

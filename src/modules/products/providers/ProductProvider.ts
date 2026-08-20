@@ -24,4 +24,11 @@ export interface ProductProvider {
     product: Product,
   ): Promise<Product>;
 
+  update(
+    product: Product,
+  ): Promise<Product>;
+
+  delete(
+    id: string,
+  ): Promise<void>;
 }

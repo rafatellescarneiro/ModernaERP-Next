@@ -43,6 +43,14 @@ import type {
   ProductFormData,
 } from "../components";
 
+import type {
+  Product,
+} from "../types"
+
+import {
+  ProductDeleteModal
+} from "../components"
+
 /**
  * Página principal de produtos.
  */
@@ -62,6 +70,12 @@ export function ProductsPage() {
    */
   const [search, setSearch] =
     useState("");
+
+  const [editingProduct, setEditingProduct] =
+    useState<Product | null>(null);
+
+  const [deletingProduct, setDeletingProduct] =
+    useState<Product | null>(null);
 
   /**
    * Aguarda 300ms após o usuário parar de digitar
@@ -85,18 +99,10 @@ export function ProductsPage() {
     loading,
     error,
     search: searchProducts,
+    create,
+    update,
+    delete: deleteProduct,
   } = useProducts();
-
-  /**
-   * Atualiza o termo de pesquisa.
-   */
-  function handleSearch(
-    value: string,
-  ) {
-
-    setSearch(value);
-
-  }
 
   /**
    * Executa a pesquisa quando o usuário
@@ -141,6 +147,35 @@ export function ProductsPage() {
   }
 
   /**
+   * Atualiza o termo de pesquisa.
+   */
+  function handleSearch(
+    value: string,
+  ) {
+
+    setSearch(value);
+
+  }
+
+  function handleEdit(
+    product: Product,
+  ){
+    setEditingProduct(
+      product,
+    );
+
+  }
+
+  function handleDelete(
+    product: Product,
+  ){
+    setDeletingProduct(
+      product,
+    );
+
+  }
+
+  /**
    * Executado quando o formulário é enviado.
    *
    * Neste momento estamos apenas verificando
@@ -153,18 +188,42 @@ export function ProductsPage() {
     data: ProductFormData,
   ) {
 
-    console.log(
-      "Dados do novo produto:",
-      data,
-    );
+    await create(data);
 
-    /**
-     * Retornamos para a lista somente depois
-     * que o envio for concluído.
-     */
     setShowCreateForm(false);
 
   }
+
+  async function handleEditSubmit(
+    data: ProductFormData,
+  ){
+
+    if(!editingProduct){
+      return;
+    }
+
+    await update(
+      editingProduct,
+      data,
+    );
+
+    setEditingProduct(null);
+  }
+
+  async function handleConfirmDelete(){
+
+    if(!deletingProduct){
+      return;
+    }
+
+    await deleteProduct(
+      deletingProduct,
+    );
+
+    setDeletingProduct(null);
+  }
+
+
 
   /**
    * --------------------------------------------------------
@@ -186,6 +245,47 @@ export function ProductsPage() {
 
         onSubmit={
           handleCreateSubmit
+        }
+
+      />
+
+    );
+
+  }
+
+/**
+ * Se existir um produto em edição,
+ * apresenta o formulário de edição.
+ */
+  if (editingProduct) {
+
+    return (
+
+      <ProductFormPage
+
+        initialData={{
+          codigo:
+            editingProduct.codigo,
+
+          sku:
+            editingProduct.sku,
+
+          titulo:
+            editingProduct.titulo,
+
+          descricao:
+            editingProduct.descricao,
+
+          quantidade:
+            editingProduct.quantidade,
+        }}
+
+        onCancel={() =>
+          setEditingProduct(null)
+        }
+
+        onSubmit={
+          handleEditSubmit
         }
 
       />
@@ -285,15 +385,40 @@ export function ProductsPage() {
             )
           }
 
-          onEdit={(product) =>
-            console.log(
-              "Editar:",
-              product,
-            )
+          onEdit={
+            handleEdit
+          }
+
+          onDelete={
+            handleDelete
           }
 
         />
 
+      )}
+
+      {deletingProduct && (
+
+        <ProductDeleteModal
+
+          product={
+            deletingProduct
+
+          }
+
+          loading={
+            loading
+
+          }
+
+          onCancel={()=>
+            setDeletingProduct(null)
+          }
+
+          onConfirm={
+            handleConfirmDelete
+          }
+          />
       )}
 
     </section>

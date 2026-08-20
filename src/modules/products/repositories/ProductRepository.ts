@@ -21,10 +21,20 @@ export class ProductRepository {
 
   ){}
 
+
+
+/**
+ * Todos os produtos cadastrados
+ */
   async findAll(): Promise<Product[]>{
     return this.provider.findAll();
   }
 
+
+
+/**
+ * Busca um produto por código do produto
+ */
   async findByCodigo(
     codigo: string
   ): Promise<Product | undefined>{
@@ -34,6 +44,10 @@ export class ProductRepository {
       (product) => product.codigo === codigo
     );
   }
+
+/**
+ * Busca um produto por SKU
+*/
 
   async findBySku(
     sku: string
@@ -45,13 +59,11 @@ export class ProductRepository {
     );
   }
 
+
+
 /**
  * Salva um produto.
- *
- * O Repository apenas encaminha a operação para
- * o Provider. Regras de negócio ficam no Service.
 */
-
   async save(
     product: Product,
   ): Promise<Product> {
@@ -61,6 +73,8 @@ export class ProductRepository {
     );
   }
 
+
+
 /**
  * Atualiza um produto.
 */
@@ -68,12 +82,12 @@ export class ProductRepository {
     product: Product,
   ): Promise<Product> {
 
-    void product;
-
-    throw new Error(
-      "ProductRepository.update ainda não foi implementado.",
-    );
+    return this.provider.update(
+      product,
+    )
   }
+
+
 
 /**
  * Exclui um produto.
@@ -82,10 +96,12 @@ export class ProductRepository {
     id: string,
   ): Promise<void> {
 
-    void id;
+    return this.provider.delete(
+      id,
 
-    throw new Error(
-      "ProductRepository.delete ainda não foi implementado.",
     );
   }
+
+
+
 }
