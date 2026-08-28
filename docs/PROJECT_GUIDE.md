@@ -43,7 +43,7 @@ Criar Imagens
 
 ↓
 
-Enviar Procode
+Enviar Precode
 
 ↓
 

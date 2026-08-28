@@ -82,7 +82,7 @@ export function ProductsPage() {
    * antes de executar a pesquisa.
    */
   const debouncedSearch =
-    useDebounce(search, 300);
+    useDebounce(search, 600);
 
   /**
    * Evita executar a pesquisa automaticamente
@@ -312,7 +312,7 @@ export function ProductsPage() {
         </h1>
 
         <p className="mt-1 text-slate-500">
-          Gerenciamento dos produtos cadastrados.
+          Gerenciamento de cadastrado.
         </p>
 
       </header>

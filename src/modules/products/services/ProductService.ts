@@ -12,7 +12,6 @@ import type { Product } from "../types";
 
 import {
   ProductStep,
-
 } from "../types"
 
 import {
@@ -144,7 +143,6 @@ export class ProductService {
    * 3. Se forem produtos diferentes,
    *    retorna conflito.
    */
-
   async search(
     term: string,
   ): Promise<ProductSearchResult>{
@@ -214,19 +212,17 @@ export class ProductService {
    * Diferentemente do método search(), este método
    * pode retornar vários produtos.
    */
-
   async searchList(
     term: string,
   ): Promise<ProductListSearchResult>{
 
-    const products =
-      await this.repository.findAll();
-
     const normalizedTerm =
       term.trim().toLowerCase();
 
-
     if(!normalizedTerm){
+
+      const products =
+        await this.repository.findAll();
 
       return {
         products,
@@ -235,6 +231,16 @@ export class ProductService {
 
       };
 
+    }
+
+    const products =
+      await this.repository.search(
+        normalizedTerm,
+      );
+
+    return {
+      products,
+      conflict: false,
     }
 
     const filteredProducts =
@@ -270,15 +276,15 @@ export class ProductService {
         data.codigo.trim(),
       );
 
-    if(
-      existingByCodigo &&
-      existingByCodigo.id !== product.id
-    ){
-      throw new Error(
-        "Já existe outro produto com este código"
-      );
+      if(
+        existingByCodigo &&
+        existingByCodigo.id !== product.id
+      ){
+        throw new Error(
+          "Já existe outro produto com este código"
+        );
 
-    }
+      }
 
     const existingBySku =
       await this.repository.findBySku(
@@ -312,6 +318,17 @@ export class ProductService {
       updateProduct,
     );
 
+  }
+
+  async updateStep(
+    product: Product,
+    step: ProductStep,
+  ): Promise<Product>{
+
+    return this.repository.updateStep(
+      product.id,
+      step,
+    );
   }
 
   async delete(

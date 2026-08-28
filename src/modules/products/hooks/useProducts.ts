@@ -19,6 +19,7 @@ import {
 
 import type {
   Product,
+  ProductStep,
 } from "../types";
 
 import {
@@ -70,6 +71,11 @@ export interface UseProductsResult {
   update:(
     product:Product,
     data: CreateProductData,
+  ) => Promise<Product>;
+
+  updateStep:(
+    product: Product,
+    step: ProductStep,
   ) => Promise<Product>;
 
   delete:(
@@ -270,6 +276,66 @@ export function useProducts(): UseProductsResult {
     [service],
   )
 
+  const updateStep =
+  useCallback(
+    async (
+      product: Product,
+      step: ProductStep,
+    ): Promise<Product> => {
+
+      try {
+
+        setLoading(true);
+
+        setError(null);
+
+        const updatedProduct =
+          await service.updateStep(
+            product,
+            step,
+          );
+
+        setProducts(
+          (current) =>
+            current.map(
+              (currentProduct) =>
+                currentProduct.id === product.id
+                  ? updatedProduct
+                  : currentProduct,
+            ),
+        );
+
+        return updatedProduct;
+
+      } catch (error) {
+
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Não foi possível atualizar a etapa.";
+
+        setError(
+          message,
+        );
+
+        throw new Error(
+          message,
+          {
+            cause: error,
+          },
+        );
+
+      } finally {
+
+        setLoading(
+          false,
+        );
+
+      }
+
+    },
+    [service],
+  );
 
   const deleteProduct = useCallback(
     async(
@@ -388,6 +454,8 @@ export function useProducts(): UseProductsResult {
     create,
 
     update,
+
+    updateStep,
 
     delete: deleteProduct,
   };

@@ -14,11 +14,26 @@
  * ==========================================================
 */
 
-import { Product } from '../types/Product';
+import {
+  ProductStep,
+  Product,
+ } from '../types';
 
 export interface ProductProvider {
 
   findAll(): Promise<Product[]>;
+
+  findByCodigo(
+    codigo: string,
+  ): Promise<Product | undefined>;
+
+  findBySku(
+    codigo: string,
+  ):Promise<Product | undefined>;
+
+  search(
+    term: string,
+  ): Promise<Product[]>;
 
   save(
     product: Product,
@@ -26,6 +41,11 @@ export interface ProductProvider {
 
   update(
     product: Product,
+  ): Promise<Product>;
+
+  updateStep(
+    id: string,
+    step: ProductStep,
   ): Promise<Product>;
 
   delete(

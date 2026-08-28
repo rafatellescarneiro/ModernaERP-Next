@@ -6,9 +6,18 @@
  * ==========================================================
 */
 
-import type { ProductProvider } from '../providers/ProductProvider';
-import type { Product } from '../types/Product';
-import { productsMock } from '../data/products.mock';
+import type {
+  ProductProvider
+} from '../providers/ProductProvider';
+
+import type {
+  Product,
+  ProductStep,
+ } from '../types';
+
+import {
+  productsMock
+} from '../data/products.mock';
 
 export class MockProductProvider
   implements ProductProvider {
@@ -22,6 +31,51 @@ export class MockProductProvider
     return [
       ...this.products,
     ];
+
+  }
+
+  async findByCodigo(
+    codigo: string,
+  ): Promise<Product | undefined> {
+
+    return this.products.find(
+      (product)=>
+        product.codigo === codigo,
+    );
+
+  }
+
+  async findBySku(
+    sku: string,
+  ): Promise<Product | undefined> {
+
+    return this.products.find(
+      (product)=>
+        product.sku === sku,
+    );
+
+  }
+
+  async search(
+    term: string,
+  ): Promise<Product[]>{
+
+    const normalizedTerm =
+      term.trim().toLowerCase();
+
+    if (!normalizedTerm){
+      return this.findAll();
+    }
+
+    return this.products.filter(
+      (product)=>
+        product.codigo
+        .toLowerCase()
+        .includes(normalizedTerm) ||
+        product.sku
+        .toLowerCase()
+        .includes(normalizedTerm),
+    );
 
   }
 
@@ -54,6 +108,36 @@ export class MockProductProvider
       this.products[index] = product;
 
       return product;
+
+  }
+
+  async updateStep(
+    id: string,
+    step: ProductStep,
+  ): Promise<Product>{
+
+    const index =
+      this.products.findIndex(
+        (product) =>
+            product.id === id,
+      );
+
+    if(index===-1){
+      throw new Error(
+        "Produto não encontrado."
+      );
+    }
+
+    const updatedProduct: Product = {
+      ...this.products[index],
+      etapa: step,
+    };
+
+    this.products[index]=
+      updatedProduct;
+
+
+    return updatedProduct;
 
   }
 

@@ -15,3 +15,7 @@ export {
   MockProductProvider,
 
 } from "./MockProductProvider";
+
+export {
+  ApiProductProvider,
+} from "./ApiProductProvider"

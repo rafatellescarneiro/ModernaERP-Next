@@ -4,66 +4,47 @@
  *
  * Centraliza a criação das dependências do módulo Produtos.
  *
- * A página e os componentes não precisam saber qual
- * Provider está sendo utilizado.
- *
- * Atualmente:
- *
- * MockProductProvider
- *
- * Futuramente poderemos substituir por:
- *
- * ExcelProductProvider
- * SQLiteProductProvider
- * ApiProductProvider
- * etc.
+ * Atualmente utilizando a API Flask.
  * ==========================================================
-*/
+ */
 
 import {
-  MockProductProvider,
-
+  ApiProductProvider,
 } from "../../modules/products/providers";
 
 import {
   ProductRepository,
-
 } from "../../modules/products/repositories";
 
 import {
   ProductService,
-
 } from "../../modules/products/services";
+
 
 /**
  * Cria uma instância do ProductService utilizando
  * o Provider atualmente configurado.
-*/
-
-export function createProductService(): ProductService{
+ */
+export function createProductService(): ProductService {
 
   /**
-   * Fonte atual dos dados.
-   *
-   * Durante o desenvolvimento estamos utilizando
-   * dados simulados.
-  */
-
+   * API Flask como fonte dos dados.
+   */
   const provider =
-  new MockProductProvider();
+    new ApiProductProvider();
 
   /**
    * Repository responsável pelo acesso aos dados.
-  */
-
+   */
   const repository =
-    new ProductRepository(provider);
+    new ProductRepository(
+      provider,
+    );
 
   /**
    * Service responsável pelas regras de negócio.
-  */
-
- return new ProductService(repository);
+   */
+  return new ProductService(
+    repository,
+  );
 }
-
-
