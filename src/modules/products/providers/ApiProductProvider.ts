@@ -246,7 +246,7 @@ export class ApiProductProvider
       await fetch(
         `${API_BASE_URL}/products/${id}/step`,
         {
-          method: "PATH",
+          method: "PATCH",
 
           headers: {
             "Content-Type":

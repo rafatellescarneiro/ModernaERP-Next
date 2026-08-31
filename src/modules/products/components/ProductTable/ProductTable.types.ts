@@ -6,6 +6,10 @@ import type {
   Product,
 } from "../../types"
 
+import {
+  ProductStep,
+} from "../../types"
+
 export interface ProductTableProps {
 
   products: Product[];
@@ -24,5 +28,10 @@ export interface ProductTableProps {
     product:Product,
 
   ) => void;
+
+  onUpdateStep:(
+    product: Product,
+    step: ProductStep,
+  )=> void | Promise<void>;
 }
 

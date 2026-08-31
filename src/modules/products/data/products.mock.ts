@@ -35,7 +35,7 @@ export const productsMock: Product[] = [
 
     previsaoMarketplace: new Date("2026-07-25"),
 
-    etapa: ProductStep.DESCRICAO,
+    etapa: ProductStep.DESCRIPTION,
 
     marketplaces: [
       {
@@ -136,7 +136,7 @@ export const productsMock: Product[] = [
 
     previsaoMarketplace: new Date("2026-07-30"),
 
-    etapa: ProductStep.IMAGENS,
+    etapa: ProductStep.IMAGES,
 
     marketplaces: [
       {

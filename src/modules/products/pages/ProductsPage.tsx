@@ -48,6 +48,10 @@ import type {
 } from "../types"
 
 import {
+  ProductStep,
+} from "../types"
+
+import {
   ProductDeleteModal
 } from "../components"
 
@@ -102,6 +106,7 @@ export function ProductsPage() {
     create,
     update,
     delete: deleteProduct,
+    updateStep,
   } = useProducts();
 
   /**
@@ -223,6 +228,16 @@ export function ProductsPage() {
     setDeletingProduct(null);
   }
 
+  async function handleUpdateStep(
+    product: Product,
+    step: ProductStep,
+  ){
+
+    await updateStep(
+      product,
+      step,
+    );
+  }
 
 
   /**
@@ -392,6 +407,8 @@ export function ProductsPage() {
           onDelete={
             handleDelete
           }
+
+          onUpdateStep={handleUpdateStep}
 
         />
 

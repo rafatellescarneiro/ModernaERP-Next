@@ -18,6 +18,6 @@ export {
 
 export {
   ProductStep,
-
+  ProductStepLabel
 } from "./ProductStep";
 

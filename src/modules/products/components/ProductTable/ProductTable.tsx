@@ -15,12 +15,49 @@ import type {
   ProductTableProps,
 } from "./ProductTable.types"
 
+import {
+  ProductStep,
+  ProductStepLabel,
+} from "../../types"
+
+function getNextStep(
+  step: ProductStep,
+): ProductStep | null {
+
+  switch(step){
+
+    case ProductStep.ERP:
+      return ProductStep.DESCRIPTION;
+
+    case ProductStep.DESCRIPTION:
+      return ProductStep.IMAGES;
+
+    case ProductStep.IMAGES:
+      return ProductStep.PRECODE;
+
+    case ProductStep.PRECODE:
+      return ProductStep.MARKETPLACE;
+
+    case ProductStep.MARKETPLACE:
+      return ProductStep.FINISHED;
+
+    case ProductStep.FINISHED:
+      return null;
+
+    default:
+      return null;
+
+
+  }
+}
+
 
 export function ProductTable({
   products,
   onEdit,
   onView,
   onDelete,
+  onUpdateStep,
 
 }: ProductTableProps){
 
@@ -82,6 +119,20 @@ export function ProductTable({
               const firstMarketplace =
                 product.marketplaces[0];
 
+              const nextStep =
+                getNextStep(
+                  product.etapa,
+                );
+
+              console.log(
+                "Produto:",
+                product.codigo,
+                "| Etapa:",
+                product.etapa,
+                "| Próxima:",
+                nextStep,
+              );
+
               return (
 
                 <tr
@@ -116,7 +167,7 @@ export function ProductTable({
                   <td className="px-6 py-4">
 
                     <span className="text-sm">
-                      {product.etapa}
+                      {ProductStepLabel[product.etapa]}
                     </span>
 
                   </td>
@@ -190,6 +241,48 @@ export function ProductTable({
                         Excluir
                       </button>
 
+                      <select
+                        value={product.etapa}
+                        onChange={(event)=>
+                          onUpdateStep(
+                            product,
+                            event.target.value as ProductStep
+                          )
+                        }
+                        className="
+                          rounded-lg
+                          border
+                          border-slate-300
+                          bg-white
+                          px-3
+                          py-2
+                          text-sm
+                        "
+                        >
+                          <option value={ProductStep.ERP}>
+                            ERP
+                          </option>
+
+                          <option value={ProductStep.DESCRIPTION}>
+                            Descrição
+                          </option>
+
+                          <option value={ProductStep.IMAGES}>
+                            Imagens
+                          </option>
+
+                          <option value={ProductStep.PRECODE}>
+                            Precode
+                          </option>
+
+                          <option value={ProductStep.MARKETPLACE}>
+                            Marketplace
+                          </option>
+
+                          <option value={ProductStep.FINISHED}>
+                            Concluído
+                          </option>
+                        </select>
 
                     </div>
 
