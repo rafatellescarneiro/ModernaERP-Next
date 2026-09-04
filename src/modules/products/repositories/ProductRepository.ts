@@ -13,6 +13,7 @@
 
 import type { Product } from "../types";
 import type { ProductProvider } from "../providers";
+import type { CentralMarketplace } from "../types/CentralMarketplace";
 
 export class ProductRepository {
 
@@ -22,14 +23,12 @@ export class ProductRepository {
   ){}
 
 
-
   /**
    * Todos os produtos cadastrados
    */
   async findAll(): Promise<Product[]>{
     return this.provider.findAll();
   }
-
 
 
   /**
@@ -45,6 +44,7 @@ export class ProductRepository {
 
   }
 
+
   /**
    * Busca um produto por SKU
   */
@@ -56,6 +56,7 @@ export class ProductRepository {
       sku
     );
   }
+
 
   /**
    * Busca produto por termo determinado
@@ -83,6 +84,7 @@ export class ProductRepository {
 
   }
 
+
   /**
    * Atualiza um produto.
    */
@@ -96,16 +98,18 @@ export class ProductRepository {
 
   }
 
+
   async updateStep(
     id: string,
     step: Product["etapa"],
   ): Promise<Product>{
-    
+
     return this.provider.updateStep(
       id,
       step,
     )
   }
+
 
   /**
    * Exclui um produto.
@@ -114,10 +118,47 @@ export class ProductRepository {
   id: string,
   ): Promise<void> {
 
-  return this.provider.delete(
-    id,
-  );
-
+    return this.provider.delete(
+      id,
+    );
   }
 
+
+  async addMarketplace(
+    productId: string,
+    marketplaceId: number,
+  ): Promise<Product>{
+    return this.provider.addMarketplace(
+      productId,
+      marketplaceId,
+    )
+  }
+
+  async updateMarketplaceStatus(
+    productId: string,
+    marketplaceId: number,
+    status: Product["marketplaces"][0]["status"],
+  ): Promise<Product>{
+
+    return this.provider.updateMarketplaceStatus(
+      productId,
+      marketplaceId,
+      status,
+    );
+  }
+
+  async deleteMarketplace(
+    productId: string,
+    marketplaceId: number,
+  ): Promise<Product> {
+    return this.provider.deleteMarketplace(
+      productId,
+      marketplaceId,
+    );
+  }
+
+  async getMarketplaces(
+  ): Promise<CentralMarketplace[]>{
+    return this.provider.getMarketplaces();
+  }
 }

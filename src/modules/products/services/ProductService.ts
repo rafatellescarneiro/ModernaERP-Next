@@ -18,6 +18,13 @@ import {
   ProductRepository,
 
 } from "../repositories";
+import { 
+  MarketplaceStatus 
+} from "../types";
+
+import type {
+  CentralMarketplace,
+} from "../types/CentralMarketplace";
 
 export interface ProductSearchResult {
   product?: Product;
@@ -357,7 +364,44 @@ export class ProductService {
 
   }
 
+  async addMarketplace(
+    productId: string,
+    marketplaceId: number,
+  ): Promise<Product>{
 
+
+    return this.repository.addMarketplace(
+      productId,
+      marketplaceId,
+    )
+
+  }
+
+  async updateMarketplaceStatus(
+    productId: string,
+    marketplaceId: number,
+    status: MarketplaceStatus,
+  ): Promise<Product>{
+    return this.repository.updateMarketplaceStatus(
+      productId,
+      marketplaceId,
+      status,
+    );
+  }
+
+  async deleteMarketplace(
+    productId: string,
+    marketplaceId: number,
+  ): Promise<Product>{
+    return this.repository.deleteMarketplace(
+      productId,
+      marketplaceId,
+    )
+  }
+
+  async getMarketplaces(): Promise<CentralMarketplace[]>{
+    return this.repository.getMarketplaces();
+  }
 }
 
 

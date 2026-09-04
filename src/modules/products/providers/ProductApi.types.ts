@@ -17,4 +17,11 @@ export interface ProductApiResponse{
   previsaoMarketplace: string | null;
 
   etapa: string;
+
+  marketplaces: {
+    id: number;
+    marketplace_id: number;
+    marketplace: string;
+    status: string;
+  }[];
 }

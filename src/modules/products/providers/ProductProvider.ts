@@ -17,7 +17,11 @@
 import {
   ProductStep,
   Product,
+  MarketplaceStatus,
  } from '../types';
+
+ import { CentralMarketplace  } from "../types/CentralMarketplace";
+
 
 export interface ProductProvider {
 
@@ -51,4 +55,25 @@ export interface ProductProvider {
   delete(
     id: string,
   ): Promise<void>;
+
+  addMarketplace(
+    productId: string,
+    marketplaceId: number,
+  ): Promise<Product>;
+
+  updateMarketplaceStatus(
+    producId: string,
+    marketplaceId: number,
+    status: MarketplaceStatus,
+  ): Promise<Product>;
+
+  deleteMarketplace(
+    productId: string,
+    marketplaceId: number,
+  ): Promise<Product>;
+
+  getMarketplaces(
+
+  ): Promise<CentralMarketplace[]>;
 }
+

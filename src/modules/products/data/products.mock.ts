@@ -39,30 +39,50 @@ export const productsMock: Product[] = [
 
     marketplaces: [
       {
+        id: 1,
+
+        marketplaceId: 1,
+
         marketplace: "MadeiraMadeira",
 
         status: MarketplaceStatus.SENT,
       },
 
       {
+        id: 2,
+
+        marketplaceId: 2,
+
         marketplace: "Magazine Luiza",
 
         status: MarketplaceStatus.PROCESSING,
       },
 
       {
+        id: 3,
+
+        marketplaceId: 3,
+
         marketplace: "Mercado Livre",
 
         status: MarketplaceStatus.NOT_SENT,
       },
 
       {
+        id: 4,
+
+        marketplaceId: 4,
+
         marketplace: "Amazon",
 
         status: MarketplaceStatus.SENT,
       },
 
       {
+        id: 5,
+
+        marketplaceId: 5,
+
         marketplace: "Shopee",
 
         status: MarketplaceStatus.NOT_SENT,
@@ -89,30 +109,50 @@ export const productsMock: Product[] = [
 
     marketplaces: [
       {
+        id: 1,
+
+        marketplaceId: 1,
+
         marketplace: "MadeiraMadeira",
 
         status: MarketplaceStatus.SENT,
       },
 
       {
+        id: 2,
+
+        marketplaceId: 2,
+
         marketplace: "Magazine Luiza",
 
         status: MarketplaceStatus.SENT,
       },
 
       {
+        id: 3,
+
+        marketplaceId: 3,
+
         marketplace: "Mercado Livre",
 
         status: MarketplaceStatus.SENT,
       },
 
       {
+        id: 4,
+
+        marketplaceId: 4,
+
         marketplace: "Amazon",
 
         status: MarketplaceStatus.PROCESSING,
       },
 
       {
+        id: 5,
+
+        marketplaceId: 5,
+
         marketplace: "Shopee",
 
         status: MarketplaceStatus.NOT_SENT,
@@ -140,18 +180,30 @@ export const productsMock: Product[] = [
 
     marketplaces: [
       {
+        id: 1,
+
+        marketplaceId: 1,
+
         marketplace: "MadeiraMadeira",
 
         status: MarketplaceStatus.NOT_SENT,
       },
 
       {
+        id: 2,
+
+        marketplaceId: 2,
+
         marketplace: "Magazine Luiza",
 
         status: MarketplaceStatus.NOT_SENT,
       },
 
       {
+        id: 3,
+
+        marketplaceId: 3,
+
         marketplace: "Mercado Livre",
 
         status: MarketplaceStatus.NOT_SENT,

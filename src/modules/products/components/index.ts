@@ -31,3 +31,7 @@ export {
   ProductDeleteModal
 } from "./ProductDeleteModal"
 
+export {
+  MarketplaceStatusBadge,
+} from "./MarketplaceStatusBadge"
+

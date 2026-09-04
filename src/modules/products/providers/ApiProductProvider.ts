@@ -14,6 +14,15 @@ import {
   ProductApiResponse,
 } from "./ProductApi.types";
 
+import type {
+  ProductMarketplace,
+} from "../types/Marketplace";
+
+import {
+  MarketplaceStatus,
+} from "../types";
+import { CentralMarketplace } from "../types/CentralMarketplace";
+
 function mapProduct(
   data: ProductApiResponse,
 ): Product {
@@ -46,9 +55,16 @@ function mapProduct(
     etapa:
       data.etapa as Product["etapa"],
 
-    marketplaces: []
-
-  }
+    marketplaces:
+      data.marketplaces.map(
+        marketplace => ({
+          id: marketplace.id,
+          marketplaceId: marketplace.marketplace_id,
+          marketplace: marketplace.marketplace,
+          status: marketplace.status as ProductMarketplace["status"],
+        }),
+      ),
+  };
 }
 
 function mapProductToApi(
@@ -69,7 +85,7 @@ function mapProductToApi(
 
     quantidade: product.quantidade,
 
-    etapa: product.etapa
+    etapa: product.etapa,
 
     }
 
@@ -315,5 +331,123 @@ export class ApiProductProvider
 
 
     }
+  }
+
+  async addMarketplace(
+    productId: string,
+    marketplaceId: number,
+  ): Promise<Product>{
+
+    const response =
+      await fetch(
+        `${API_BASE_URL}/products/${productId}/marketplaces`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify({
+            marketplace_id: marketplaceId,
+          }),
+        },
+      );
+
+    if (!response.ok){
+
+      const data =
+        await response.json().catch(
+          () => null,
+        );
+
+        throw new Error(
+          data?.message ??
+          "Não foi possível adicionar o produto ao marketplace."
+        );
+    }
+
+    const data =
+      await response.json() as ProductApiResponse;
+
+    return mapProduct(data);
+
+  }
+
+  async updateMarketplaceStatus(
+    productId: string,
+    marketplaceId: number,
+    status: MarketplaceStatus
+  ): Promise<Product> {
+    const response = await fetch(
+      `${API_BASE_URL}/products/${productId}/marketplaces/${marketplaceId}/status`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status,
+        }),
+      },
+    );
+
+    if (!response.ok){
+      const data =
+        await response.json().catch(()=> null);
+
+      throw new Error(
+        data?.message ??
+          "Não foi possível atualizar o stsatus do marketplace.",
+      );
+    }
+
+    const data =
+      await response.json() as ProductApiResponse;
+
+    return mapProduct(data);
+
+  }
+
+  async deleteMarketplace(
+    productId: string,
+    marketplaceId: number,
+  ): Promise<Product> {
+    const response = await fetch(
+      `${API_BASE_URL}/products/${productId}/marketplaces/${marketplaceId}`,
+      {
+        method: "DELETE",
+      },
+    );
+
+    if(!response.ok){
+      const data =
+        await response.json().catch(()=> null);
+
+      throw new Error(
+        data?.message ??
+          "Não foi possível excluir o marketplace.",
+      );
+    }
+
+    const data =
+      await response.json() as ProductApiResponse;
+
+    return mapProduct(data);
+  }
+
+  async getMarketplaces(): Promise<CentralMarketplace[]>{
+    const response = await fetch(
+      `${API_BASE_URL}/marketplaces`,
+    );
+
+    if(!response.ok){
+      throw new Error(
+        "Não foi possível carregar os marketplaces."
+      );
+    }
+
+    return response.json();
   }
 }

@@ -4,51 +4,68 @@
  *
  * Tabela principal do módulo Produtos.
  * ==========================================================
-*/
+ */
 
-import {
-  ProductStatusBadge,
-
-} from "../ProductStatusBadge";
+import type {
+  Product,
+} from "../../types";
 
 import type {
   ProductTableProps,
-} from "./ProductTable.types"
+} from "./ProductTable.types";
 
 import {
+  MarketplaceStatus,
   ProductStep,
   ProductStepLabel,
-} from "../../types"
-
-function getNextStep(
-  step: ProductStep,
-): ProductStep | null {
-
-  switch(step){
-
-    case ProductStep.ERP:
-      return ProductStep.DESCRIPTION;
-
-    case ProductStep.DESCRIPTION:
-      return ProductStep.IMAGES;
-
-    case ProductStep.IMAGES:
-      return ProductStep.PRECODE;
-
-    case ProductStep.PRECODE:
-      return ProductStep.MARKETPLACE;
-
-    case ProductStep.MARKETPLACE:
-      return ProductStep.FINISHED;
-
-    case ProductStep.FINISHED:
-      return null;
-
-    default:
-      return null;
+} from "../../types";
 
 
-  }
+/**
+ * Retorna um resumo dos marketplaces
+ * cadastrados no produto.
+ */
+function getMarketplaceSummary(
+  product: Product,
+) {
+  const total =
+    product.marketplaces.length;
+
+  const published =
+    product.marketplaces.filter(
+      marketplace =>
+        marketplace.status ===
+        MarketplaceStatus.SENT,
+    ).length;
+
+  const processing =
+    product.marketplaces.filter(
+      marketplace =>
+        marketplace.status ===
+        MarketplaceStatus.PROCESSING,
+    ).length;
+
+  const notSent =
+    product.marketplaces.filter(
+      marketplace =>
+        marketplace.status ===
+        MarketplaceStatus.NOT_SENT,
+    ).length;
+
+  const errors =
+    product.marketplaces.filter(
+      marketplace =>
+        marketplace.status ===
+        MarketplaceStatus.ERROR,
+    ).length;
+
+  return {
+    total,
+    published,
+    processing,
+    notSent,
+    errors,
+  };
 }
 
 
@@ -58,11 +75,34 @@ export function ProductTable({
   onView,
   onDelete,
   onUpdateStep,
+}: ProductTableProps) {
 
-}: ProductTableProps){
+  /**
+   * Caso nenhuma busca encontre produtos,
+   * exibimos uma mensagem no lugar da tabela.
+   */
+  if (products.length === 0) {
+    return (
+      <div
+        className="
+          rounded-xl
+          border
+          border-slate-200
+          bg-white
+          p-8
+          text-center
+          text-sm
+          text-slate-500
+        "
+      >
+        Nenhum produto encontrado.
+      </div>
+    );
+  }
 
-  return(
-<div
+
+  return (
+    <div
       className="
         overflow-hidden
         rounded-xl
@@ -80,31 +120,94 @@ export function ProductTable({
 
             <tr>
 
-              <th className="px-6 py-4 text-xs font-semibold uppercase text-slate-500">
+              <th
+                className="
+                  px-6
+                  py-4
+                  text-xs
+                  font-semibold
+                  uppercase
+                  text-slate-500
+                "
+              >
                 Código
               </th>
 
-              <th className="px-6 py-4 text-xs font-semibold uppercase text-slate-500">
+              <th
+                className="
+                  px-6
+                  py-4
+                  text-xs
+                  font-semibold
+                  uppercase
+                  text-slate-500
+                "
+              >
                 SKU
               </th>
 
-              <th className="px-6 py-4 text-xs font-semibold uppercase text-slate-500">
+              <th
+                className="
+                  px-6
+                  py-4
+                  text-xs
+                  font-semibold
+                  uppercase
+                  text-slate-500
+                "
+              >
                 Produto
               </th>
 
-              <th className="px-6 py-4 text-xs font-semibold uppercase text-slate-500">
+              <th
+                className="
+                  px-6
+                  py-4
+                  text-xs
+                  font-semibold
+                  uppercase
+                  text-slate-500
+                "
+              >
                 Quantidade
               </th>
 
-              <th className="px-6 py-4 text-xs font-semibold uppercase text-slate-500">
+              <th
+                className="
+                  px-6
+                  py-4
+                  text-xs
+                  font-semibold
+                  uppercase
+                  text-slate-500
+                "
+              >
                 Etapa
               </th>
 
-              <th className="px-6 py-4 text-xs font-semibold uppercase text-slate-500">
-                Marketplace
+              <th
+                className="
+                  px-6
+                  py-4
+                  text-xs
+                  font-semibold
+                  uppercase
+                  text-slate-500
+                "
+              >
+                Marketplaces
               </th>
 
-              <th className="px-6 py-4 text-xs font-semibold uppercase text-slate-500">
+              <th
+                className="
+                  px-6
+                  py-4
+                  text-xs
+                  font-semibold
+                  uppercase
+                  text-slate-500
+                "
+              >
                 Ações
               </th>
 
@@ -112,41 +215,63 @@ export function ProductTable({
 
           </thead>
 
+
           <tbody className="divide-y">
 
             {products.map((product) => {
 
-              const firstMarketplace =
-                product.marketplaces[0];
-
-              const nextStep =
-                getNextStep(
-                  product.etapa,
+              /**
+               * Calcula somente os números que
+               * serão mostrados na tabela.
+               *
+               * Os marketplaces individuais ficam
+               * disponíveis na tela "Ver produto".
+               */
+              const marketplaceSummary =
+                getMarketplaceSummary(
+                  product,
                 );
 
-              console.log(
-                "Produto:",
-                product.codigo,
-                "| Etapa:",
-                product.etapa,
-                "| Próxima:",
-                nextStep,
-              );
 
               return (
 
                 <tr
                   key={product.id}
-                  className="transition hover:bg-slate-50"
+                  className="
+                    transition
+                    hover:bg-slate-50
+                  "
                 >
 
-                  <td className="px-6 py-4 text-sm font-medium">
+                  {/* Código */}
+
+                  <td
+                    className="
+                      px-6
+                      py-4
+                      text-sm
+                      font-medium
+                    "
+                  >
                     {product.codigo}
                   </td>
 
-                  <td className="px-6 py-4 text-sm text-slate-600">
+
+                  {/* SKU */}
+
+                  <td
+                    className="
+                      px-6
+                      py-4
+                      text-sm
+                      text-slate-600
+                    "
+                  >
                     {product.sku}
                   </td>
+
+
+                  {/* Produto */}
 
                   <td className="px-6 py-4">
 
@@ -154,47 +279,143 @@ export function ProductTable({
                       {product.titulo}
                     </div>
 
-                    <div className="text-xs text-slate-500">
+                    <div
+                      className="
+                        text-xs
+                        text-slate-500
+                      "
+                    >
                       {product.descricao}
                     </div>
 
                   </td>
 
-                  <td className="px-6 py-4 text-sm">
+
+                  {/* Quantidade */}
+
+                  <td
+                    className="
+                      px-6
+                      py-4
+                      text-sm
+                    "
+                  >
                     {product.quantidade}
                   </td>
+
+
+                  {/* Etapa */}
 
                   <td className="px-6 py-4">
 
                     <span className="text-sm">
-                      {ProductStepLabel[product.etapa]}
+                      {
+                        ProductStepLabel[
+                          product.etapa
+                        ]
+                      }
                     </span>
 
                   </td>
 
+
+                  {/* Marketplaces */}
+
                   <td className="px-6 py-4">
 
-                    {firstMarketplace ? (
+                    {marketplaceSummary.total ===
+                    0 ? (
 
-                      <ProductStatusBadge
-                        status={
-                          firstMarketplace.status
-                        }
-                      />
+                      <span
+                        className="
+                          text-sm
+                          text-slate-400
+                        "
+                      >
+                        Nenhum
+                      </span>
 
                     ) : (
 
-                      <span className="text-sm text-slate-400">
-                        —
-                      </span>
+                      <div className="space-y-1">
+
+                        <div
+                          className="
+                            text-sm
+                            font-medium
+                            text-slate-700
+                          "
+                        >
+                          {
+                            marketplaceSummary.total
+                          }{" "}
+                          {
+                            marketplaceSummary.total ===
+                            1
+                              ? "marketplace"
+                              : "marketplaces"
+                          }
+                        </div>
+
+                        <div
+                          className="
+                            flex
+                            flex-wrap
+                            gap-x-2
+                            gap-y-1
+                            text-xs
+                          "
+                        >
+
+                          {marketplaceSummary.published > 0 && (
+                            <span className="text-slate-500">
+                              {marketplaceSummary.published} publicados
+                            </span>
+                          )}
+
+                          {marketplaceSummary.processing > 0 && (
+                            <span className="text-slate-500">
+                              {marketplaceSummary.processing} processando
+                            </span>
+                          )}
+
+                          {marketplaceSummary.notSent > 0 && (
+                            <span className="text-slate-500">
+                              {marketplaceSummary.notSent} não enviados
+                            </span>
+                          )}
+
+                          {marketplaceSummary.errors > 0 && (
+                            <span
+                              className="
+                                font-medium
+                                text-red-600
+                              "
+                            >
+                              {marketplaceSummary.errors} com erro
+                            </span>
+                          )}
+
+                        </div>
+
+                      </div>
 
                     )}
 
                   </td>
 
+
+                  {/* Ações */}
+
                   <td className="px-6 py-4">
 
-                    <div className="flex gap-2">
+                    <div
+                      className="
+                        flex
+                        items-center
+                        gap-2
+                      "
+                    >
 
                       <button
                         type="button"
@@ -211,6 +432,7 @@ export function ProductTable({
                         Ver
                       </button>
 
+
                       <button
                         type="button"
                         onClick={() =>
@@ -226,9 +448,10 @@ export function ProductTable({
                         Editar
                       </button>
 
+
                       <button
                         type="button"
-                        onClick={()=>
+                        onClick={() =>
                           onDelete?.(product)
                         }
                         className="
@@ -241,12 +464,16 @@ export function ProductTable({
                         Excluir
                       </button>
 
+
+                      {/* Alteração da etapa */}
+
                       <select
                         value={product.etapa}
-                        onChange={(event)=>
+                        onChange={(event) =>
                           onUpdateStep(
                             product,
-                            event.target.value as ProductStep
+                            event.target
+                              .value as ProductStep,
                           )
                         }
                         className="
@@ -258,37 +485,64 @@ export function ProductTable({
                           py-2
                           text-sm
                         "
+                      >
+
+                        <option
+                          value={
+                            ProductStep.ERP
+                          }
                         >
-                          <option value={ProductStep.ERP}>
-                            ERP
-                          </option>
+                          ERP
+                        </option>
 
-                          <option value={ProductStep.DESCRIPTION}>
-                            Descrição
-                          </option>
+                        <option
+                          value={
+                            ProductStep.DESCRIPTION
+                          }
+                        >
+                          Descrição
+                        </option>
 
-                          <option value={ProductStep.IMAGES}>
-                            Imagens
-                          </option>
+                        <option
+                          value={
+                            ProductStep.IMAGES
+                          }
+                        >
+                          Imagens
+                        </option>
 
-                          <option value={ProductStep.PRECODE}>
-                            Precode
-                          </option>
+                        <option
+                          value={
+                            ProductStep.PRECODE
+                          }
+                        >
+                          Precode
+                        </option>
 
-                          <option value={ProductStep.MARKETPLACE}>
-                            Marketplace
-                          </option>
+                        <option
+                          value={
+                            ProductStep.MARKETPLACE
+                          }
+                        >
+                          Marketplace
+                        </option>
 
-                          <option value={ProductStep.FINISHED}>
-                            Concluído
-                          </option>
-                        </select>
+                        <option
+                          value={
+                            ProductStep.FINISHED
+                          }
+                        >
+                          Concluído
+                        </option>
+
+                      </select>
 
                     </div>
 
                   </td>
 
                 </tr>
+
               );
             })}
 
@@ -299,7 +553,5 @@ export function ProductTable({
       </div>
 
     </div>
-
-  )
-
+  );
 }

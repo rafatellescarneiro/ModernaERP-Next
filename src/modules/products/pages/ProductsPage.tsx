@@ -55,6 +55,10 @@ import {
   ProductDeleteModal
 } from "../components"
 
+import {
+  ProductDetailsPage,
+} from "./ProductDetailsPage";
+
 /**
  * Página principal de produtos.
  */
@@ -100,14 +104,26 @@ export function ProductsPage() {
    */
   const {
     products,
+    marketplaces,
     loading,
     error,
     search: searchProducts,
+    loadMarketplaces,
     create,
     update,
     delete: deleteProduct,
     updateStep,
+    addMarketplace,
+    updateMarketplaceStatus,
+    deleteMarketplace,
   } = useProducts();
+
+  const [
+    viewingProduct,
+    setViewingProduct,
+  ] = useState<Product | null>(
+    null,
+  );
 
   /**
    * Executa a pesquisa quando o usuário
@@ -175,6 +191,33 @@ export function ProductsPage() {
     product: Product,
   ){
     setDeletingProduct(
+      product,
+    );
+
+  }
+
+  function handleView(
+    product: Product,
+  ) {
+    setViewingProduct(
+      product,
+    );
+  }
+
+  function handleCloseView(){
+    setViewingProduct(
+      null,
+    );
+  }
+
+  function handleEditFromDetails(
+    product: Product,
+  ){
+    setViewingProduct(
+      null,
+    );
+
+    setEditingProduct(
       product,
     );
 
@@ -309,6 +352,27 @@ export function ProductsPage() {
 
   }
 
+  if(viewingProduct){
+    return(
+      <ProductDetailsPage
+        product={viewingProduct}
+        onBack={handleCloseView}
+        onEdit={handleEditFromDetails}
+        onAddMarketplace={addMarketplace}
+        onUpdateMarketplaceStatus={
+          updateMarketplaceStatus
+        }
+        onDeleteMarketplace={
+          deleteMarketplace
+        }
+        marketplaces={marketplaces}
+        onLoadMarketplaces={loadMarketplaces}
+      />
+    )
+  }
+
+
+
   /**
    * --------------------------------------------------------
    * MODO: LISTA
@@ -393,12 +457,7 @@ export function ProductsPage() {
             products
           }
 
-          onView={(product) =>
-            console.log(
-              "Visualizar:",
-              product,
-            )
-          }
+          onView={handleView}
 
           onEdit={
             handleEdit

@@ -19,6 +19,12 @@ import {
   productsMock
 } from '../data/products.mock';
 
+import {
+  MarketplaceStatus,
+} from "../types/Marketplace";
+import { CentralMarketplace } from '../types/CentralMarketplace';
+
+
 export class MockProductProvider
   implements ProductProvider {
 
@@ -166,4 +172,157 @@ export class MockProductProvider
 
   }
 
+  async addMarketplace(
+    productId: string,
+    marketplaceId: number,
+  ): Promise<Product>{
+
+    const product =
+      this.products.find(
+        currentProduct =>
+          currentProduct.id === productId,
+      );
+
+    if(!product){
+      throw new Error(
+        "Produto não encontrado."
+      );
+    }
+
+    const marketplaceExists =
+      product.marketplaces.some(
+        (item) =>
+            item.marketplaceId=== marketplaceId
+      );
+
+    if(marketplaceExists){
+      throw new Error(
+        "O produto já está vinculado a este marketplace."
+      );
+    }
+
+    const centralMarketplace =
+      await this.getMarketplaces();
+
+    const marketplaceData =
+      centralMarketplace.find(
+        (item) =>
+          item.id === marketplaceId
+      );
+
+    if(!marketplaceData){
+      throw new Error(
+        "Marketplace não encontrado.",
+      )
+    }
+
+    if(!marketplaceData.ativo){
+      throw new Error(
+        "Marketplace está intaivo.",
+      )
+    }
+
+    const productMarketplaceId =
+      product.marketplaces.length > 0
+        ? Math.max(
+          ...product.marketplaces.map(
+            (item)=> item.id,
+          ),
+        ) +1
+      : 1;
+
+    product.marketplaces.push({
+      id: productMarketplaceId,
+      marketplaceId: marketplaceData.id,
+      marketplace: marketplaceData.nome,
+      status: MarketplaceStatus.NOT_SENT,
+    });
+
+
+    return product;
+
+  }
+
+  async updateMarketplaceStatus(
+  productId: string,
+  marketplaceId: number,
+  status: MarketplaceStatus,
+): Promise<Product> {
+  const product = this.products.find(
+    currentProduct =>
+      currentProduct.id === productId,
+  );
+
+  if (!product) {
+    throw new Error(
+      "Produto não encontrado.",
+    );
+  }
+
+    const marketplace =
+      product.marketplaces.find(
+        currentMarketplace =>
+          currentMarketplace.id === marketplaceId,
+      );
+
+    if (!marketplace) {
+      throw new Error(
+        "Marketplace não encontrado.",
+      );
+    }
+
+    marketplace.status = status;
+
+    return product;
+  }
+
+  async deleteMarketplace(
+    productId: string,
+    marketplaceId: number,
+  ): Promise<Product> {
+    const product = this.products.find(
+      currentProduct =>
+          currentProduct.id === productId,
+    );
+
+    if(!product){
+      throw new Error(
+        "Produto não encontrado.",
+      );
+    }
+
+    const marketplaceIndex =
+      product.marketplaces.findIndex(
+        marketplace =>
+          marketplace.id === marketplaceId,
+      );
+
+    if (marketplaceIndex === -1){
+      throw new Error(
+        "Marketplace não encontrado."
+      );
+    }
+
+    product.marketplaces.splice(
+      marketplaceIndex,
+      1,
+    );
+
+    return product;
+  }
+
+  async getMarketplaces(): Promise<CentralMarketplace[]> {
+    return [
+      {
+      id: 1,
+      nome: "Mercado Livre",
+      ativo: true,
+      },
+      {
+        id: 2,
+        nome: "Amazon",
+        ativo: true,
+      },
+    ]
+  }
 }

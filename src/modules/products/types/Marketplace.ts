@@ -19,7 +19,8 @@ export enum MarketplaceStatus {
 }
 
 export interface ProductMarketplace {
+  id: number;
+  marketplaceId: number;
   marketplace: string;
-
   status: MarketplaceStatus;
 }
