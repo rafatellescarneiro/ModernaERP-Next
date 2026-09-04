@@ -19,6 +19,7 @@ import {
 
 import type {
   Product,
+  ProductStep,
 } from "../types";
 
 import {
@@ -30,6 +31,14 @@ import type {
 
 } from "../services/ProductService";
 
+import {
+  MarketplaceStatus,
+} from "../types";
+
+import type {
+  CentralMarketplace,
+} from "../types/CentralMarketplace";
+
 /**
  * Retorno disponibilizado pelo Hook.
  */
@@ -39,6 +48,11 @@ export interface UseProductsResult {
    * Produtos carregados.
    */
   products: Product[];
+
+  /**
+   * Marketplaces cadastradas.
+   */
+  marketplaces: CentralMarketplace[];
 
   /**
    * Indica se os dados estão sendo carregados.
@@ -62,6 +76,8 @@ export interface UseProductsResult {
     term: string,
   ) => Promise<void>;
 
+  loadMarketplaces: () => Promise<void>;
+
   create:(
     data: CreateProductData,
 
@@ -72,9 +88,30 @@ export interface UseProductsResult {
     data: CreateProductData,
   ) => Promise<Product>;
 
+  updateStep:(
+    product: Product,
+    step: ProductStep,
+  ) => Promise<Product>;
+
   delete:(
     product: Product
   ) => Promise<void>
+
+  addMarketplace:(
+    productId: string,
+    marketplaceId: number,
+  ) => Promise<Product>;
+
+  updateMarketplaceStatus:(
+    productId: string,
+    productMarketplaceId: number,
+    status: MarketplaceStatus ,
+  ) => Promise<Product>;
+
+  deleteMarketplace: (
+    productId: string,
+    productMarketplaceId: number,
+  )=> Promise<Product>;
 }
 
 /**
@@ -99,6 +136,10 @@ export function useProducts(): UseProductsResult {
   const [error, setError] =
     useState<string | null>(null);
 
+
+  const [marketplaces, setMarketplaces,] =
+    useState<CentralMarketplace[]>([]);  
+  
   /**
    * Carrega os produtos através do Service.
    */
@@ -130,11 +171,46 @@ export function useProducts(): UseProductsResult {
 
     }, [service]);
 
+  const loadMarketplaces = 
+    useCallback(
+      async(): Promise<void> => {
+        try{
+          setError(null);
+
+          const result =
+          await service.getMarketplaces();
+
+          setMarketplaces(
+            result,
+          );
+
+        } catch(error) {
+
+          const message =
+            error instanceof Error
+              ? error.message
+              : "Não foi possível carregar os marketplaces."
+          
+          setError(
+            message,
+          )
+
+          throw new Error(
+            message,
+            {
+              cause: error,
+            },
+          );
+        } 
+      },
+      [service],
+    );
+
+
   /**
    * Carrega os produtos quando o Hook
    * é inicializado.
    */
-
   const search =
     useCallback(
       async(term: string) => {
@@ -270,6 +346,66 @@ export function useProducts(): UseProductsResult {
     [service],
   )
 
+  const updateStep =
+  useCallback(
+    async (
+      product: Product,
+      step: ProductStep,
+    ): Promise<Product> => {
+
+      try {
+
+        setLoading(true);
+
+        setError(null);
+
+        const updatedProduct =
+          await service.updateStep(
+            product,
+            step,
+          );
+
+        setProducts(
+          (current) =>
+            current.map(
+              (currentProduct) =>
+                currentProduct.id === product.id
+                  ? updatedProduct
+                  : currentProduct,
+            ),
+        );
+
+        return updatedProduct;
+
+      } catch (error) {
+
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Não foi possível atualizar a etapa.";
+
+        setError(
+          message,
+        );
+
+        throw new Error(
+          message,
+          {
+            cause: error,
+          },
+        );
+
+      } finally {
+
+        setLoading(
+          false,
+        );
+
+      }
+
+    },
+    [service],
+  );
 
   const deleteProduct = useCallback(
     async(
@@ -313,6 +449,155 @@ export function useProducts(): UseProductsResult {
       }
     },
     [service]
+  )
+
+  const addMarketplace = useCallback(
+    async(
+      productId: string,
+      marketplaceId: number,
+    ): Promise<Product> => {
+
+      try {
+
+        setLoading(true);
+
+        setError(null);
+
+        const updatedProduct =
+          await service.addMarketplace(
+            productId,
+            marketplaceId,
+          );
+
+        setProducts(
+          (current) =>
+            current.map(product =>
+              product.id === productId
+                ? updatedProduct
+                : product,
+            ),
+        );
+
+        return updatedProduct;
+        
+      } catch (error) {
+
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Não foi possível adicionar o marketplace.";
+
+        setError(message);
+
+        throw new Error(
+          message,
+          {
+            cause: error,
+          },
+        );
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    },
+    [service],
+  )
+
+  const updateMarketplaceStatus = 
+    useCallback(
+      async(
+        productId: string,
+        productMarketplaceId: number,
+        status: MarketplaceStatus,
+      ): Promise<Product>=>{
+        try{
+
+          setLoading(true);
+
+          setError(null);
+
+          const updatedProduct =
+            await service.updateMarketplaceStatus(
+              productId,
+              productMarketplaceId,
+              status,
+            );
+
+            setProducts(current =>
+              current.map(product =>
+                product.id === productId
+                ? updatedProduct
+                : product,
+              ),
+            );
+
+            return updatedProduct;
+
+          } catch (error){
+
+            const message =
+              error instanceof Error
+                ? error.message
+                : "Não foi possível atualizar o marketplace.";
+
+            setError(message);
+
+            throw new Error(message,{
+              cause: error,
+          });
+        } finally {
+          setLoading(false);
+        }
+      },
+      [service]
+    );
+
+  const deleteMarketplace = useCallback(
+    async(
+      productId: string,
+      productMarketplaceId: number,
+    ): Promise<Product> => {
+      try{
+
+        setLoading(true);
+
+        setError(null);
+
+        const updateProduct = 
+          await service.deleteMarketplace(
+            productId,
+            productMarketplaceId,
+          );
+
+        setProducts(current =>
+          current.map(product =>
+            product.id === productId
+              ? updateProduct
+              : product,
+          ),
+        );
+
+        return updateProduct;
+      } catch(error){
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Nâo foi possível excluir o marketplace.";
+        
+        setError(message);
+
+        throw new Error(message,{
+          cause: error,
+        });
+
+      } finally {
+        setLoading(false);
+      }
+    },
+    [service],
   )
 
 
@@ -381,14 +666,26 @@ export function useProducts(): UseProductsResult {
 
     error,
 
+    marketplaces,
+
     reload: loadProducts,
 
     search,
+    
+    loadMarketplaces,
 
     create,
 
     update,
 
+    updateStep,
+
     delete: deleteProduct,
+
+    addMarketplace,
+
+    updateMarketplaceStatus,
+
+    deleteMarketplace,
   };
 }

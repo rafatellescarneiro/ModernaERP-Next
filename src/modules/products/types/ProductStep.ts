@@ -11,8 +11,19 @@ export enum ProductStep {
   ERP = "ERP",
   DESCRIPTION = "DESCRIPTION",
   IMAGES = "IMAGES",
-  PROCODE = "PROCODE",
+  PRECODE = "PRECODE",
   MARKETPLACE = "MARKETPLACE",
   FINISHED = "FINISHED",
-
 }
+
+export const ProductStepLabel: Record<
+  ProductStep,
+  string
+> = {
+  [ProductStep.ERP]: "ERP",
+  [ProductStep.DESCRIPTION]: "Descrição",
+  [ProductStep.IMAGES]: "Imagens",
+  [ProductStep.PRECODE]: "Procode",
+  [ProductStep.MARKETPLACE]: "Marketplace",
+  [ProductStep.FINISHED]: "Concluído",
+};

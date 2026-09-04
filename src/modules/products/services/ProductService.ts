@@ -12,13 +12,19 @@ import type { Product } from "../types";
 
 import {
   ProductStep,
-
 } from "../types"
 
 import {
   ProductRepository,
 
 } from "../repositories";
+import { 
+  MarketplaceStatus 
+} from "../types";
+
+import type {
+  CentralMarketplace,
+} from "../types/CentralMarketplace";
 
 export interface ProductSearchResult {
   product?: Product;
@@ -144,7 +150,6 @@ export class ProductService {
    * 3. Se forem produtos diferentes,
    *    retorna conflito.
    */
-
   async search(
     term: string,
   ): Promise<ProductSearchResult>{
@@ -214,19 +219,17 @@ export class ProductService {
    * Diferentemente do método search(), este método
    * pode retornar vários produtos.
    */
-
   async searchList(
     term: string,
   ): Promise<ProductListSearchResult>{
 
-    const products =
-      await this.repository.findAll();
-
     const normalizedTerm =
       term.trim().toLowerCase();
 
-
     if(!normalizedTerm){
+
+      const products =
+        await this.repository.findAll();
 
       return {
         products,
@@ -235,6 +238,16 @@ export class ProductService {
 
       };
 
+    }
+
+    const products =
+      await this.repository.search(
+        normalizedTerm,
+      );
+
+    return {
+      products,
+      conflict: false,
     }
 
     const filteredProducts =
@@ -270,15 +283,15 @@ export class ProductService {
         data.codigo.trim(),
       );
 
-    if(
-      existingByCodigo &&
-      existingByCodigo.id !== product.id
-    ){
-      throw new Error(
-        "Já existe outro produto com este código"
-      );
+      if(
+        existingByCodigo &&
+        existingByCodigo.id !== product.id
+      ){
+        throw new Error(
+          "Já existe outro produto com este código"
+        );
 
-    }
+      }
 
     const existingBySku =
       await this.repository.findBySku(
@@ -314,6 +327,17 @@ export class ProductService {
 
   }
 
+  async updateStep(
+    product: Product,
+    step: ProductStep,
+  ): Promise<Product>{
+
+    return this.repository.updateStep(
+      product.id,
+      step,
+    );
+  }
+
   async delete(
     product: Product,
 
@@ -340,7 +364,44 @@ export class ProductService {
 
   }
 
+  async addMarketplace(
+    productId: string,
+    marketplaceId: number,
+  ): Promise<Product>{
 
+
+    return this.repository.addMarketplace(
+      productId,
+      marketplaceId,
+    )
+
+  }
+
+  async updateMarketplaceStatus(
+    productId: string,
+    marketplaceId: number,
+    status: MarketplaceStatus,
+  ): Promise<Product>{
+    return this.repository.updateMarketplaceStatus(
+      productId,
+      marketplaceId,
+      status,
+    );
+  }
+
+  async deleteMarketplace(
+    productId: string,
+    marketplaceId: number,
+  ): Promise<Product>{
+    return this.repository.deleteMarketplace(
+      productId,
+      marketplaceId,
+    )
+  }
+
+  async getMarketplaces(): Promise<CentralMarketplace[]>{
+    return this.repository.getMarketplaces();
+  }
 }
 
 

@@ -13,6 +13,7 @@
 
 import type { Product } from "../types";
 import type { ProductProvider } from "../providers";
+import type { CentralMarketplace } from "../types/CentralMarketplace";
 
 export class ProductRepository {
 
@@ -22,86 +23,142 @@ export class ProductRepository {
   ){}
 
 
-
-/**
- * Todos os produtos cadastrados
- */
+  /**
+   * Todos os produtos cadastrados
+   */
   async findAll(): Promise<Product[]>{
     return this.provider.findAll();
   }
 
 
-
-/**
- * Busca um produto por código do produto
- */
+  /**
+   * Busca um produto por código do produto
+   */
   async findByCodigo(
     codigo: string
   ): Promise<Product | undefined>{
-    const products = await this.provider.findAll();
 
-    return products.find(
-      (product) => product.codigo === codigo
+    return this.provider.findByCodigo(
+      codigo
     );
+
   }
 
-/**
- * Busca um produto por SKU
-*/
 
+  /**
+   * Busca um produto por SKU
+  */
   async findBySku(
     sku: string
   ): Promise<Product | undefined>{
-    const products = await this.provider.findAll();
 
-    return products.find(
-      (product) => product.sku === sku
+    return this.provider.findBySku(
+      sku
     );
   }
 
 
+  /**
+   * Busca produto por termo determinado
+  */
+  async search(
+    term: string,
+  ): Promise<Product[]>{
 
-/**
- * Salva um produto.
-*/
+    return this.provider.search(
+      term,
+    );
+  }
+
+
+  /**
+   * Salva um produto.
+   */
   async save(
-    product: Product,
+  product: Product,
   ): Promise<Product> {
 
-    return this.provider.save(
-      product,
-    );
+  return this.provider.save(
+    product,
+  );
+
   }
 
 
-
-/**
- * Atualiza um produto.
-*/
+  /**
+   * Atualiza um produto.
+   */
   async update(
-    product: Product,
+  product: Product,
   ): Promise<Product> {
 
-    return this.provider.update(
-      product,
+  return this.provider.update(
+    product,
+  );
+
+  }
+
+
+  async updateStep(
+    id: string,
+    step: Product["etapa"],
+  ): Promise<Product>{
+
+    return this.provider.updateStep(
+      id,
+      step,
     )
   }
 
 
-
-/**
- * Exclui um produto.
-*/
+  /**
+   * Exclui um produto.
+   */
   async delete(
-    id: string,
+  id: string,
   ): Promise<void> {
 
     return this.provider.delete(
       id,
-
     );
   }
 
 
+  async addMarketplace(
+    productId: string,
+    marketplaceId: number,
+  ): Promise<Product>{
+    return this.provider.addMarketplace(
+      productId,
+      marketplaceId,
+    )
+  }
 
+  async updateMarketplaceStatus(
+    productId: string,
+    marketplaceId: number,
+    status: Product["marketplaces"][0]["status"],
+  ): Promise<Product>{
+
+    return this.provider.updateMarketplaceStatus(
+      productId,
+      marketplaceId,
+      status,
+    );
+  }
+
+  async deleteMarketplace(
+    productId: string,
+    marketplaceId: number,
+  ): Promise<Product> {
+    return this.provider.deleteMarketplace(
+      productId,
+      marketplaceId,
+    );
+  }
+
+  async getMarketplaces(
+  ): Promise<CentralMarketplace[]>{
+    return this.provider.getMarketplaces();
+  }
 }

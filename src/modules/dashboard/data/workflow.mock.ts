@@ -32,7 +32,7 @@ export const workflowData = [
 
   {
 
-    etapa: "Procode",
+    etapa: "Precode",
 
     quantidade: 7,
 

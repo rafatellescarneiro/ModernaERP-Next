@@ -6,9 +6,13 @@
  * ==========================================================
  */
 
+import {
+  ProductMarketplace,
+} from "./Marketplace";
 
-import { ProductMarketplace } from "./Marketplace";
-import { ProductStep } from "./ProductStep";
+import {
+  ProductStep,
+} from "./ProductStep";
 
 export interface Product {
 

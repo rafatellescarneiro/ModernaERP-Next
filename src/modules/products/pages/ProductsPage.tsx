@@ -48,8 +48,16 @@ import type {
 } from "../types"
 
 import {
+  ProductStep,
+} from "../types"
+
+import {
   ProductDeleteModal
 } from "../components"
+
+import {
+  ProductDetailsPage,
+} from "./ProductDetailsPage";
 
 /**
  * Página principal de produtos.
@@ -82,7 +90,7 @@ export function ProductsPage() {
    * antes de executar a pesquisa.
    */
   const debouncedSearch =
-    useDebounce(search, 300);
+    useDebounce(search, 600);
 
   /**
    * Evita executar a pesquisa automaticamente
@@ -96,13 +104,26 @@ export function ProductsPage() {
    */
   const {
     products,
+    marketplaces,
     loading,
     error,
     search: searchProducts,
+    loadMarketplaces,
     create,
     update,
     delete: deleteProduct,
+    updateStep,
+    addMarketplace,
+    updateMarketplaceStatus,
+    deleteMarketplace,
   } = useProducts();
+
+  const [
+    viewingProduct,
+    setViewingProduct,
+  ] = useState<Product | null>(
+    null,
+  );
 
   /**
    * Executa a pesquisa quando o usuário
@@ -175,6 +196,33 @@ export function ProductsPage() {
 
   }
 
+  function handleView(
+    product: Product,
+  ) {
+    setViewingProduct(
+      product,
+    );
+  }
+
+  function handleCloseView(){
+    setViewingProduct(
+      null,
+    );
+  }
+
+  function handleEditFromDetails(
+    product: Product,
+  ){
+    setViewingProduct(
+      null,
+    );
+
+    setEditingProduct(
+      product,
+    );
+
+  }
+
   /**
    * Executado quando o formulário é enviado.
    *
@@ -223,6 +271,16 @@ export function ProductsPage() {
     setDeletingProduct(null);
   }
 
+  async function handleUpdateStep(
+    product: Product,
+    step: ProductStep,
+  ){
+
+    await updateStep(
+      product,
+      step,
+    );
+  }
 
 
   /**
@@ -294,6 +352,27 @@ export function ProductsPage() {
 
   }
 
+  if(viewingProduct){
+    return(
+      <ProductDetailsPage
+        product={viewingProduct}
+        onBack={handleCloseView}
+        onEdit={handleEditFromDetails}
+        onAddMarketplace={addMarketplace}
+        onUpdateMarketplaceStatus={
+          updateMarketplaceStatus
+        }
+        onDeleteMarketplace={
+          deleteMarketplace
+        }
+        marketplaces={marketplaces}
+        onLoadMarketplaces={loadMarketplaces}
+      />
+    )
+  }
+
+
+
   /**
    * --------------------------------------------------------
    * MODO: LISTA
@@ -312,7 +391,7 @@ export function ProductsPage() {
         </h1>
 
         <p className="mt-1 text-slate-500">
-          Gerenciamento dos produtos cadastrados.
+          Gerenciamento de cadastrado.
         </p>
 
       </header>
@@ -378,12 +457,7 @@ export function ProductsPage() {
             products
           }
 
-          onView={(product) =>
-            console.log(
-              "Visualizar:",
-              product,
-            )
-          }
+          onView={handleView}
 
           onEdit={
             handleEdit
@@ -392,6 +466,8 @@ export function ProductsPage() {
           onDelete={
             handleDelete
           }
+
+          onUpdateStep={handleUpdateStep}
 
         />
 
